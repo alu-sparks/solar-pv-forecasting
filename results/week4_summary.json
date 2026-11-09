@@ -1,0 +1,21 @@
+{
+  "system_id": 10,
+  "year": 2008,
+  "daily_files": 366,
+  "raw_valid_15_minute_observations": 35130,
+  "hourly_observations": 8784,
+  "missing_expected_hours": 0,
+  "zero_generation_hours": 4404,
+  "zero_generation_percent": 50.13661202185792,
+  "minimum_w": 0.0,
+  "median_w": 0.0,
+  "mean_w": 201.35313891450366,
+  "q75_w": 347.125,
+  "maximum_w": 1149.425,
+  "training_mean_baseline_w": 204.85152788529956,
+  "test_mae_of_training_mean_baseline_w": 261.862694208652,
+  "training_rows": 7027,
+  "test_rows": 1757,
+  "first_timestamp": "2008-01-01 00:00:00",
+  "last_timestamp": "2008-12-31 23:00:00"
+}

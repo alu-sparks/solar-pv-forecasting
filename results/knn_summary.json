@@ -1,0 +1,31 @@
+{
+  "features": [
+    "lag_1",
+    "lag_2",
+    "lag_3",
+    "lag_4",
+    "lag_5",
+    "lag_6",
+    "lag_24",
+    "rolling_3",
+    "rolling_6",
+    "hour_sin",
+    "hour_cos",
+    "doy_sin",
+    "doy_cos"
+  ],
+  "folds": 6,
+  "best_knn": {
+    "method": "kNN (k=5)",
+    "mean_mae_w": 100.66057721098703,
+    "sd_mae_w": 15.542981062239987,
+    "mean_normalized_mae_percent": 24.644167251494455
+  },
+  "ridge": {
+    "method": "Ridge",
+    "mean_mae_w": 106.95206835581995,
+    "sd_mae_w": 10.471707607024372,
+    "mean_normalized_mae_percent": 26.186029528607666
+  },
+  "best_knn_minus_ridge_mae_w": -6.291491144832918
+}

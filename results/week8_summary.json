@@ -1,0 +1,80 @@
+{
+  "features": [
+    "lag_1",
+    "lag_2",
+    "lag_3",
+    "lag_4",
+    "lag_5",
+    "lag_6",
+    "lag_24",
+    "rolling_3",
+    "rolling_6",
+    "hour_sin",
+    "hour_cos",
+    "doy_sin",
+    "doy_cos"
+  ],
+  "folds": 6,
+  "test_months": [
+    "2008-04",
+    "2008-05",
+    "2008-06",
+    "2008-07",
+    "2008-08",
+    "2008-09"
+  ],
+  "random_forest_complexity": {
+    "n_estimators": 120,
+    "max_depth": 7,
+    "min_samples_leaf": 15,
+    "max_features_per_split": 4,
+    "mean_realized_depth": 7.0,
+    "mean_leaves_per_tree": 65.02361111111112
+  },
+  "summary": [
+    {
+      "method": "Random forest",
+      "mean_mae_w": 88.2248106944126,
+      "sd_mae_w": 10.747897125202906,
+      "mean_normalized_mae_percent": 21.582284918066435
+    },
+    {
+      "method": "Ridge",
+      "mean_mae_w": 106.95206835581995,
+      "sd_mae_w": 10.471707607024372,
+      "mean_normalized_mae_percent": 26.186029528607666
+    },
+    {
+      "method": "Persistence",
+      "mean_mae_w": 148.20855668389854,
+      "sd_mae_w": 5.062212628535114,
+      "mean_normalized_mae_percent": 36.19396818770961
+    }
+  ],
+  "top_impurity_importances": [
+    {
+      "feature": "lag_1",
+      "impurity_importance": 0.3523608268182898
+    },
+    {
+      "feature": "hour_cos",
+      "impurity_importance": 0.23742878412328464
+    },
+    {
+      "feature": "lag_24",
+      "impurity_importance": 0.12169289179720039
+    },
+    {
+      "feature": "rolling_3",
+      "impurity_importance": 0.09257250193882215
+    },
+    {
+      "feature": "hour_sin",
+      "impurity_importance": 0.06169993468781874
+    },
+    {
+      "feature": "lag_2",
+      "impurity_importance": 0.054604708615991766
+    }
+  ]
+}

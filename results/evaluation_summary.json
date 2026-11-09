@@ -1,0 +1,21 @@
+{
+  "procedure": "one-hour persistence forecast",
+  "daytime_window": "06:00-18:59",
+  "single_80_20_holdout_start": "2008-10-19 19:00:00",
+  "single_80_20_holdout_end": "2008-12-31 23:00:00",
+  "single_80_20_daytime_hours": 949,
+  "single_80_20_daytime_mae_w": 136.14464220231824,
+  "single_80_20_mean_daytime_actual_w": 346.8854433877766,
+  "single_80_20_normalized_daytime_mae_percent": 39.24772422638812,
+  "single_80_20_all_hour_mae_w": 73.53515392714854,
+  "rolling_folds": 6,
+  "rolling_daytime_mae_mean_w": 148.20855668389854,
+  "rolling_daytime_mae_sd_w": 5.0622126285351055,
+  "rolling_daytime_mae_min_w": 144.6124375,
+  "rolling_daytime_mae_max_w": 158.13903692307693,
+  "rolling_daytime_mae_range_w": 13.52659942307693,
+  "rolling_normalized_daytime_mae_mean_percent": 36.193968187709615,
+  "rolling_normalized_daytime_mae_sd_percent": 2.005682379972177,
+  "rolling_normalized_daytime_mae_min_percent": 33.34073839074966,
+  "rolling_normalized_daytime_mae_max_percent": 39.492869613009326
+}

@@ -1,0 +1,34 @@
+{
+  "reduced_features": [
+    "lag_1",
+    "lag_24",
+    "hour_sin",
+    "hour_cos",
+    "doy_sin",
+    "doy_cos"
+  ],
+  "full_features": [
+    "lag_1",
+    "lag_2",
+    "lag_3",
+    "lag_4",
+    "lag_5",
+    "lag_6",
+    "lag_24",
+    "rolling_3",
+    "rolling_6",
+    "hour_sin",
+    "hour_cos",
+    "doy_sin",
+    "doy_cos"
+  ],
+  "folds": 6,
+  "reduced_mae_mean_w": 112.84360177770434,
+  "reduced_mae_sd_w": 8.644607934557044,
+  "full_mae_mean_w": 106.95206835581992,
+  "full_mae_sd_w": 10.471707607024372,
+  "mean_full_minus_reduced_mae_w": -5.891533421884397,
+  "folds_where_full_is_better": 6,
+  "reduced_nmae_mean_percent": 27.61107150806262,
+  "full_nmae_mean_percent": 26.186029528607666
+}

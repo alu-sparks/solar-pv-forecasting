@@ -1,0 +1,45 @@
+{
+  "dataset_shape": [
+    569,
+    30
+  ],
+  "class_counts": {
+    "benign": 357,
+    "malignant": 212
+  },
+  "train_counts": {
+    "benign": 285,
+    "malignant": 170
+  },
+  "test_counts": {
+    "benign": 72,
+    "malignant": 42
+  },
+  "best_params": {
+    "model__C": 10,
+    "model__gamma": 0.01
+  },
+  "best_cv_auc": 0.9953560371517028,
+  "confusion_matrices": {
+    "Logistic regression": [
+      [
+        71,
+        1
+      ],
+      [
+        3,
+        39
+      ]
+    ],
+    "Tuned RBF SVM": [
+      [
+        72,
+        0
+      ],
+      [
+        2,
+        40
+      ]
+    ]
+  }
+}
