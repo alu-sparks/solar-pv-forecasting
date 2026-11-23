@@ -1,0 +1,10 @@
+{
+  "raw_rows": 8784,
+  "duplicate_timestamps": 0,
+  "missing_expected_hours": 0,
+  "missing_power_values": 0,
+  "negative_power_values_before_clip": 0,
+  "zero_generation_hours": 4404,
+  "eligible_feature_rows": 8760,
+  "rows_removed_for_lag_initialization": 24
+}

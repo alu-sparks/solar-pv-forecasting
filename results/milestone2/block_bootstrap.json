@@ -1,0 +1,8 @@
+{
+  "comparison": "Random forest minus Persistence",
+  "mean_mae_difference_w": -63.85745241028517,
+  "ci_lower_w": -68.31977013063306,
+  "ci_upper_w": -58.70390457045761,
+  "block_length_daytime_hours": 13,
+  "bootstrap_repeats": 2000
+}
