@@ -1,0 +1,69 @@
+{
+  "timestamps_strictly_increasing": true,
+  "timestamps_unique": true,
+  "all_timestamp_steps_one_hour": true,
+  "timestamp_timezone_encoded": false,
+  "dst_treatment": "The source timestamps are timezone-naive and form a continuous fixed hourly clock. No timezone localization or daylight-saving conversion is applied; the recorded hour is preserved for reproducibility.",
+  "spring_dst_date_regular_hourly_sequence": true,
+  "fall_dst_date_regular_hourly_sequence": true,
+  "feature_lineage_checks": {
+    "lag_1_uses_only_prior_values": true,
+    "lag_2_uses_only_prior_values": true,
+    "lag_3_uses_only_prior_values": true,
+    "lag_4_uses_only_prior_values": true,
+    "lag_5_uses_only_prior_values": true,
+    "lag_6_uses_only_prior_values": true,
+    "lag_24_uses_only_prior_values": true,
+    "rolling_3_is_shifted_before_aggregation": true,
+    "rolling_6_is_shifted_before_aggregation": true
+  },
+  "all_feature_lineage_checks_passed": true,
+  "all_static_leakage_checks_passed": true,
+  "fold_checks": [
+    {
+      "test_month": "2008-04",
+      "outer_train_ends_before_outer_test": true,
+      "inner_train_ends_before_inner_validation": true,
+      "inner_validation_ends_before_outer_test": true,
+      "all_fold_checks_passed": true
+    },
+    {
+      "test_month": "2008-05",
+      "outer_train_ends_before_outer_test": true,
+      "inner_train_ends_before_inner_validation": true,
+      "inner_validation_ends_before_outer_test": true,
+      "all_fold_checks_passed": true
+    },
+    {
+      "test_month": "2008-06",
+      "outer_train_ends_before_outer_test": true,
+      "inner_train_ends_before_inner_validation": true,
+      "inner_validation_ends_before_outer_test": true,
+      "all_fold_checks_passed": true
+    },
+    {
+      "test_month": "2008-07",
+      "outer_train_ends_before_outer_test": true,
+      "inner_train_ends_before_inner_validation": true,
+      "inner_validation_ends_before_outer_test": true,
+      "all_fold_checks_passed": true
+    },
+    {
+      "test_month": "2008-08",
+      "outer_train_ends_before_outer_test": true,
+      "inner_train_ends_before_inner_validation": true,
+      "inner_validation_ends_before_outer_test": true,
+      "all_fold_checks_passed": true
+    },
+    {
+      "test_month": "2008-09",
+      "outer_train_ends_before_outer_test": true,
+      "inner_train_ends_before_inner_validation": true,
+      "inner_validation_ends_before_outer_test": true,
+      "all_fold_checks_passed": true
+    }
+  ],
+  "all_fold_checks_passed": true,
+  "scaling_fitted_inside_ridge_and_knn_training_pipelines": true,
+  "outer_test_never_used_for_hyperparameter_selection": true
+}

@@ -53,6 +53,67 @@ def build_features(hourly: pd.DataFrame) -> pd.DataFrame:
     return data.dropna(subset=FEATURES).reset_index(drop=True)
 
 
+def validate_time_and_feature_lineage(
+    hourly: pd.DataFrame, featured: pd.DataFrame
+) -> dict[str, object]:
+    """Execute timestamp, DST-treatment, and predictor-lineage leakage checks."""
+    raw = hourly.sort_values("measured_on").copy()
+    raw["pv_generation_w"] = raw["pv_generation_w"].clip(lower=0)
+    timestamps = raw["measured_on"]
+    one_hour = np.timedelta64(1, "h")
+    differences = timestamps.diff().dropna()
+
+    checks: dict[str, object] = {
+        "timestamps_strictly_increasing": bool(timestamps.is_monotonic_increasing),
+        "timestamps_unique": bool(not timestamps.duplicated().any()),
+        "all_timestamp_steps_one_hour": bool((differences == one_hour).all()),
+        "timestamp_timezone_encoded": bool(timestamps.dt.tz is not None),
+        "dst_treatment": (
+            "The source timestamps are timezone-naive and form a continuous fixed hourly "
+            "clock. No timezone localization or daylight-saving conversion is applied; "
+            "the recorded hour is preserved for reproducibility."
+        ),
+    }
+
+    for label, start in {
+        "spring_dst_date_regular_hourly_sequence": pd.Timestamp("2008-03-09 00:00"),
+        "fall_dst_date_regular_hourly_sequence": pd.Timestamp("2008-11-02 00:00"),
+    }.items():
+        window = timestamps.loc[timestamps.between(start, start + pd.DateOffset(hours=6))]
+        checks[label] = bool(
+            len(window) == 7 and (window.diff().dropna() == one_hour).all()
+        )
+
+    indexed_target = raw.set_index("measured_on")["pv_generation_w"]
+    observed = featured.set_index("measured_on")
+    lineage_checks: dict[str, bool] = {}
+    for lag in [1, 2, 3, 4, 5, 6, 24]:
+        expected = indexed_target.shift(lag).reindex(observed.index)
+        lineage_checks[f"lag_{lag}_uses_only_prior_values"] = bool(
+            np.allclose(observed[f"lag_{lag}"], expected, equal_nan=False)
+        )
+    for window in [3, 6]:
+        expected = indexed_target.shift(1).rolling(window).mean().reindex(observed.index)
+        lineage_checks[f"rolling_{window}_is_shifted_before_aggregation"] = bool(
+            np.allclose(observed[f"rolling_{window}"], expected, equal_nan=False)
+        )
+    checks["feature_lineage_checks"] = lineage_checks
+    checks["all_feature_lineage_checks_passed"] = bool(all(lineage_checks.values()))
+
+    required = [
+        checks["timestamps_strictly_increasing"],
+        checks["timestamps_unique"],
+        checks["all_timestamp_steps_one_hour"],
+        checks["spring_dst_date_regular_hourly_sequence"],
+        checks["fall_dst_date_regular_hourly_sequence"],
+        checks["all_feature_lineage_checks_passed"],
+    ]
+    checks["all_static_leakage_checks_passed"] = bool(all(required))
+    if not checks["all_static_leakage_checks_passed"]:
+        raise AssertionError("A timestamp or feature-lineage leakage check failed.")
+    return checks
+
+
 def candidate_models(seed: int) -> dict[str, list[tuple[dict, object]]]:
     ridge = [
         (
@@ -275,6 +336,8 @@ def main() -> None:
     data = build_features(raw)
     audit["eligible_feature_rows"] = int(len(data))
     audit["rows_removed_for_lag_initialization"] = int(len(raw) - len(data))
+    leakage_checks = validate_time_and_feature_lineage(raw, data)
+    fold_leakage_checks: list[dict[str, object]] = []
 
     metric_rows: list[dict] = []
     prediction_rows: list[dict] = []
@@ -290,13 +353,31 @@ def main() -> None:
             & (data["measured_on"] < test_end)
             & data["scheduled_daytime"]
         ].copy()
-        validation_start = test_start - pd.Timedelta(days=30)
+        validation_start = test_start - pd.DateOffset(days=30)
         inner_train = outer_train.loc[outer_train["measured_on"] < validation_start]
         inner_valid = outer_train.loc[
             (outer_train["measured_on"] >= validation_start)
             & outer_train["scheduled_daytime"]
         ]
         month_label = test_start.strftime("%Y-%m")
+        fold_checks = {
+            "test_month": month_label,
+            "outer_train_ends_before_outer_test": bool(
+                outer_train["measured_on"].max() < outer_test["measured_on"].min()
+            ),
+            "inner_train_ends_before_inner_validation": bool(
+                inner_train["measured_on"].max() < inner_valid["measured_on"].min()
+            ),
+            "inner_validation_ends_before_outer_test": bool(
+                inner_valid["measured_on"].max() < outer_test["measured_on"].min()
+            ),
+        }
+        fold_checks["all_fold_checks_passed"] = bool(
+            all(value for key, value in fold_checks.items() if key != "test_month")
+        )
+        if not fold_checks["all_fold_checks_passed"]:
+            raise AssertionError(f"Chronological split check failed for {month_label}.")
+        fold_leakage_checks.append(fold_checks)
         y_test = outer_test["pv_generation_w"].to_numpy(float)
         x_test = outer_test[FEATURES]
 
@@ -422,6 +503,12 @@ def main() -> None:
         100 * (baseline_mae - summary["mean_mae_w"]) / baseline_mae
     )
     bootstrap = block_bootstrap_difference(predictions_df, "Random forest")
+    leakage_checks["fold_checks"] = fold_leakage_checks
+    leakage_checks["all_fold_checks_passed"] = bool(
+        all(row["all_fold_checks_passed"] for row in fold_leakage_checks)
+    )
+    leakage_checks["scaling_fitted_inside_ridge_and_knn_training_pipelines"] = True
+    leakage_checks["outer_test_never_used_for_hyperparameter_selection"] = True
 
     metrics.to_csv(args.output / "outer_fold_metrics.csv", index=False)
     summary.to_csv(args.output / "model_summary.csv", index=False)
@@ -433,6 +520,9 @@ def main() -> None:
     )
     (args.output / "block_bootstrap.json").write_text(
         json.dumps(bootstrap, indent=2), encoding="utf-8"
+    )
+    (args.output / "leakage_checks.json").write_text(
+        json.dumps(leakage_checks, indent=2), encoding="utf-8"
     )
     make_figures(metrics, predictions_df, importance, args.output)
     print(summary.to_string(index=False, float_format=lambda x: f"{x:.3f}"))

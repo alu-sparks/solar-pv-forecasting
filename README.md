@@ -32,6 +32,7 @@ results/
     figures/
     block_bootstrap.json
     data_audit.json
+    leakage_checks.json
     model_summary.csv
     outer_fold_metrics.csv
     outer_fold_predictions.csv
@@ -60,7 +61,7 @@ README.md
      --output results/milestone2
    ```
 
-The script fixes random seeds, records all outer-fold metrics and selected hyperparameters, and recreates the figures used in the report. The earlier Week 4–9 files remain in the repository as exploratory provenance; the `milestone2_nested_evaluation.py` script and `results/milestone2/` directory contain the current leakage-safe research execution.
+The script fixes random seeds, records all outer-fold metrics and selected hyperparameters, executes timestamp, feature-lineage, and split leakage assertions, and recreates the figures used in the report. `results/milestone2/leakage_checks.json` documents every assertion, including the fixed-clock treatment of timezone-naive timestamps across the daylight-saving transition dates. The earlier Week 4–9 files remain as exploratory provenance; the `milestone2_nested_evaluation.py` script and `results/milestone2/` directory contain the current leakage-safe research execution.
 
 ## Validation and prediction boundary
 
